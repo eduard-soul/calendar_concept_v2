@@ -5,8 +5,9 @@
 </template>
 
 <script setup lang="ts">
-  import { onUpdated, ref} from 'vue';
+  import { onUpdated, provide, ref} from 'vue';
 
+  const emit = defineEmits(['taskEmited']);
   let input = ref("");
 
   function parseInput(input: string) {
@@ -38,6 +39,8 @@
     task = parseInput(input.value);
     if (task) {
       console.log("Right task");
+      input.value = "";
+      emit('taskEmited', task);
     }
     else {
       console.log("Invalid task");

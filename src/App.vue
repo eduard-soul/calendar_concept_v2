@@ -4,7 +4,7 @@
       <Calendar></Calendar>
     </section>
     <section id="tasks-wrapper">
-      <AddTask></AddTask>
+      <AddTask @taskEmited="(task) => {provideTask(task)}"></AddTask>
       <Tasks></Tasks>
     </section>
   </div>
@@ -14,6 +14,20 @@
   import Calendar from "./Calendar.vue"
   import AddTask from "./AddTask.vue"
   import Tasks from "./Tasks.vue"
+  import { onMounted, onUpdated, provide, reactive, ref } from "vue";
+
+  let task_provide = reactive({name: "", duration: 0});
+  provide('task_provide', task_provide);
+
+  function provideTask(task) {
+    task_provide.name = task.name;
+    task_provide.duration = task.duration;
+  }
+
+  onMounted(() => {
+  })
+  onUpdated(() => {
+  })
 </script>
 
 <style lang="scss">

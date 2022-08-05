@@ -9,22 +9,39 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { inject, onMounted, onUpdated, reactive, watch} from 'vue';
   
   interface Task_object {
     name: string,
     duration: number,
   }
   let tasks_array:Array<Task_object> = reactive([]);
-
-  let task = {name: "Task", duration: 120};
-
-  tasks_array.push(task);
+  let task_provided = reactive({name: "", duration: 0});
 
   function deleteTask(n: number) {
     tasks_array.splice(n, 1);
   }
 
+  task_provided = inject('task_provide');
+
+  watch(task_provided, () => {
+    let task:Task_object = {name: "", duration: 0};
+
+    task.name = task_provided.name;
+    task.duration = task_provided.duration;
+    tasks_array.push(task);
+  })
+  // setInterval(() => {
+  //   console.log(task_provided);
+  // }, 1000)
+
+  onMounted(() => {
+  })
+
+  onUpdated(() => {
+    console.log("Updated");
+    console.log(task_provided);
+  })
 </script>
 
 <style lang="scss" scoped>
