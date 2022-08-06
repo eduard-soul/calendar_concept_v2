@@ -48,5 +48,8 @@
     height: 25%;
     border-bottom: 0.1vh grey solid;
   }
+  #h23quarter3 {
+    border-bottom: 0 grey solid;
+  }
 }
 </style>
