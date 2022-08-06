@@ -5,8 +5,8 @@
       v-bind:key="n"
       :id="'task' + n"
       class="task"
-      @mousedown="taskDrag(n, true)"
-      @mouseup="taskDrag(n, false)"
+      @mousedown="taskDrag(n, true), task_index = n"
+      @mouseup="taskDrag(n, false), task_index = n"
     >
       {{ task.name }} {{ n }}
       {{ task.duration }}
@@ -24,13 +24,43 @@ interface Task_object {
 }
 let tasks_array: Array<Task_object> = reactive([]);
 let task_provided = reactive({ name: "", duration: 0 });
-let mouse_move_listener:EventListener;
+let task_index = ref(0);
+let first = ref(true);
+let mouse_on_task = ref({x: 0, y: 0}); 
 
 function deleteTask(n: number) {
   tasks_array.splice(n, 1);
 }
 
 task_provided = inject("task_provide");
+
+
+function moveTask(e: MouseEvent) {
+  let task = document.getElementById("task"+task_index.value);
+
+  if (task) {
+    if (first.value == true) {
+      mouse_on_task.value.x = e.pageX - task.getBoundingClientRect().left; 
+      mouse_on_task.value.y = e.pageY - task.getBoundingClientRect().top; 
+      first.value = false;
+    }
+    task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
+    task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
+  }
+}
+
+function taskDrag(n: number, mouse: boolean) {
+  let app = document.getElementById("app");
+
+  if (mouse) {
+    console.log(n, mouse);
+    app?.addEventListener("mousemove", moveTask)
+  } else {
+    console.log(n, mouse);
+    app?.removeEventListener("mousemove", moveTask)
+    first.value = true;
+  }
+}
 
 watch(task_provided, () => {
   let task: Task_object = { name: "", duration: 0 };
@@ -40,40 +70,6 @@ watch(task_provided, () => {
   tasks_array.push(task);
 });
 
-function taskDrag(n: number, drag: boolean) {
-  let first = ref(true);
-  let mouse_on_task = ref({x: 0, y: 0});
-  let app = document.getElementById("app");
-
-function watchMouseMouve(e:MouseEvent, n: number, first: Ref, mouse_on_task: Ref) { 
-  let task = document.getElementById('task'+n);
-
-  console.log("watchMouse");
-  if (task) {
-    if  (first.value == true) {
-      mouse_on_task.value = {x: e.pageX - task.getBoundingClientRect().left , y: e.pageY - task.getBoundingClientRect().top};
-
-      first.value = false;
-      console.log(mouse_on_task.value.x, mouse_on_task.value.y);
-    }
-    task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
-    task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
-    // console.log(mouse_on_task.value.x, mouse_on_task.value.y);
-  }
-}
-
-  function test(e) {
-    watchMouseMouve(e, n, first, mouse_on_task);
-  }
-
-  if (drag) {
-    console.log(drag);
-    app.addEventListener('mousemove', test, {passive: true});
-  } else if (!drag) {
-    console.log(drag);
-    app.removeEventListener('mousemove', test, {passive: true});
-  }
-}
 
 onMounted(() => {});
 

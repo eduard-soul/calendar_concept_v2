@@ -63,4 +63,7 @@ onUpdated(() => {});
     background-color: green;
   }
 }
+button {
+  height: 100px;
+}
 </style>
