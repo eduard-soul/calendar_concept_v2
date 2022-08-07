@@ -34,6 +34,18 @@ function deleteTask(n: number) {
 
 task_provided = inject("task_provide");
 
+function isTaskOnHour(n: number) {
+  let task = document.getElementById('task'+n);
+  let hours = document.getElementsByClassName('hour-wrapper');
+
+  if (task && hours) {
+    for (let i = 0; i < hours.length; i++) {
+      console.log(hours[i].clientLeft);
+      console.log(hours[i].clientTop);
+    }
+    // console.log('task'+n+' is on calendar');
+  }
+}
 
 function moveTask(e: MouseEvent) {
   let task = document.getElementById("task"+task_index.value);
@@ -52,13 +64,15 @@ function moveTask(e: MouseEvent) {
 function taskDrag(n: number, mouse: boolean) {
   let app = document.getElementById("app");
 
-  if (mouse) {
-    console.log(n, mouse);
-    app?.addEventListener("mousemove", moveTask)
+  if (!app) {
+    console.error("document.getElementById('app')");
+  }
+  else if (mouse) {
+    app.addEventListener("mousemove", moveTask)
   } else {
-    console.log(n, mouse);
-    app?.removeEventListener("mousemove", moveTask)
+    app.removeEventListener("mousemove", moveTask)
     first.value = true;
+    isTaskOnHour(n);
   }
 }
 
