@@ -36,6 +36,7 @@ let task_index = ref(0);
 let first = ref(true);
 let mouse_on_task = ref({ x: 0, y: 0 });
 let scroll_top = ref(0);
+let previous_scroll = ref(-1);
 
 function deleteTask(n: number) {
   tasks_array.splice(n, 1);
@@ -77,21 +78,66 @@ function isTasksOnCalendar(n: number) {
   let task = document.getElementById('task'+n);
 
   if (hours && calendar_wrapper && task) {
-    if (task.getBoundingClientRect().top > hours[0].getBoundingClientRect().top
-      && task.getBoundingClientRect().top < hours[23].getBoundingClientRect().top
-      && task.getBoundingClientRect().left > hours[0].getBoundingClientRect().left
-      && task.getBoundingClientRect().left < hours[0].getBoundingClientRect().right)   {
+    if (task.getBoundingClientRect().top >= hours[0].getBoundingClientRect().top
+      && task.getBoundingClientRect().top <= hours[23].getBoundingClientRect().bottom
+      && task.getBoundingClientRect().left >= hours[0].getBoundingClientRect().left
+      && task.getBoundingClientRect().left <= hours[0].getBoundingClientRect().right)   {
       return (1);
     }
     else {
+      if (task.getBoundingClientRect().top < hours[0].getBoundingClientRect().top) {
+        console.log("top < h0top");
+        console.log(task.getBoundingClientRect().top, hours[0].getBoundingClientRect().top);
+      }
+      // if (task.getBoundingClientRect().top < hours[23].getBoundingClientRect().bottom) {
+      //   console.log("top > h23top");
+      // }
+      // if (task.getBoundingClientRect().left > hours[0].getBoundingClientRect().left) {
+      //   console.log("left < h0left");
+      // }
+      // if (task.getBoundingClientRect().left < hours[0].getBoundingClientRect().right) {
+      //   console.log("left > h0right");
+      // }
       return (0);
     }
   }
+}
 
+function whereIsTask(n: number) {
+  let where = {hour: 0, quarter: 0};
+  let task = document.getElementById('task'+n);
+  let hours = Array.from(document.getElementsByClassName('hour-wrapper') as HTMLCollectionOf<HTMLElement>); 
+
+  if (task) {
+    let i = 0;
+    if (task.getBoundingClientRect().top >= hours[12].getBoundingClientRect().top) {
+      i = 12;
+    }
+    for (i; i < hours.length; i++) {
+      if (task.getBoundingClientRect().top <= hours[i].getBoundingClientRect().top) {
+        break ;
+      }
+    }
+    i--;
+    where.hour = i;
+    where.quarter = Math.floor((task.getBoundingClientRect().top - hours[i].getBoundingClientRect().top) / (hours[i].getBoundingClientRect().height / 4));
+  }
+
+  return (where);
+}
+
+function putTaskOnQuarter(n: number, where: {hour: number, quarter: number}) {
+  let quarter = document.getElementById('h'+where.hour+'quarter'+where.quarter);
+  let task = document.getElementById('task'+n)
+
+  if (quarter && task) {
+    task.style.top = `${quarter.getBoundingClientRect().top}px`;
+    task.style.left = `${quarter.getBoundingClientRect().left}px`;
+  } 
 }
 
 function applyPositionToTask() {
-  let tasks = document.getElementsByClassName('task');
+  let tasks = Array.from(document.getElementsByClassName('task') as HTMLCollectionOf<HTMLElement>);
   let input = document.getElementById('input-wrapper');
   let not_on_calendar_height = 0;
 
@@ -111,8 +157,43 @@ function applyPositionToTask() {
         not_on_calendar_height += tasks[i].getBoundingClientRect().height;
       } 
       else {
+        putTaskOnQuarter(i, whereIsTask(i));
+        // console.log(whereIsTask(i));
       }
     }
+  }
+}
+
+function checkScroll() {
+  let calendar = document.getElementById('calendar-wrapper');
+  let previous_task_top: string;
+  let task;
+
+  if (calendar) {
+    calendar.addEventListener('scroll', () => {
+      if (calendar) {
+        if (previous_scroll.value == -1) {
+          previous_scroll.value = calendar.scrollTop;
+        }
+        for (let i = 0; i < tasks_array.length; i++) {
+          task = document.getElementById('task'+i);
+          // I used a trick, to make the scroll work, it add the scroll to all the task, and then check 
+          // if the task is on calendar, if not, reinitialize to the initial task, but is not good, because
+          // it can create glitch of task that are not on calendar <!TO REFACTO>
+          if (task && calendar) {
+            previous_task_top = task.style.top;
+            task.style.top = `${parseInt(task.style.top) - (calendar.scrollTop - previous_scroll.value)}px`;
+            if (isTasksOnCalendar(i)) {
+              console.log('ON CALENDAR');
+            }
+            else {
+              task.style.top = previous_task_top;
+            }
+          }
+        }
+        previous_scroll.value = calendar.scrollTop;
+      }
+    })
   }
 }
 
@@ -124,7 +205,9 @@ watch(task_provided, () => {
   tasks_array.push(task);
 });
 
-onMounted(() => {});
+onMounted(() => {
+  checkScroll();
+});
 
 onUpdated(() => {
   console.log("Tasks.vue updated");
@@ -142,10 +225,12 @@ onUpdated(() => {
   background-color: yellow;
 }
 .task {
-  width: 30%;
+  width: 20%;
   height: auto;
   background-color: greenyellow;
   position: absolute;
+  display: flex;
+  justify-content: space-between;
 
   .delete-task-btn {
     height: 100%;
