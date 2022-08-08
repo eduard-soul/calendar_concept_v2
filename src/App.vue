@@ -30,7 +30,17 @@ function provideTask(task) {
   task_provide.duration = task.duration;
 }
 
-onMounted(() => {});
+function initialScrollPosition() {
+  let calendar_wrapper = document.getElementById('calendar-wrapper');
+
+  if (calendar_wrapper) {
+    calendar_wrapper.scrollTop = calendar_wrapper.scrollHeight / 4;
+  }
+}
+
+onMounted(() => {
+  initialScrollPosition();
+});
 onUpdated(() => {});
 </script>
 

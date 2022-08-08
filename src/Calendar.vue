@@ -7,10 +7,10 @@
   >
     <h1>{{ i - 1 }}</h1>
     <div class="quarter-wrapper">
-      <div class="quarter" :id="'h'+ (i - 1)+'quarter'+0"></div>
-      <div class="quarter" :id="'h'+ (i - 1)+'quarter'+1"></div>
-      <div class="quarter" :id="'h'+ (i - 1)+'quarter'+2"></div>
-      <div class="quarter" :id="'h'+ (i - 1)+'quarter'+3"></div>
+      <div class="quarter" :id="'h' + (i - 1) + 'quarter' + 0"></div>
+      <div class="quarter" :id="'h' + (i - 1) + 'quarter' + 1"></div>
+      <div class="quarter" :id="'h' + (i - 1) + 'quarter' + 2"></div>
+      <div class="quarter" :id="'h' + (i - 1) + 'quarter' + 3"></div>
     </div>
   </div>
 </template>
