@@ -85,19 +85,6 @@ function isTasksOnCalendar(n: number) {
       return (1);
     }
     else {
-      if (task.getBoundingClientRect().top < hours[0].getBoundingClientRect().top) {
-        console.log("top < h0top");
-        console.log(task.getBoundingClientRect().top, hours[0].getBoundingClientRect().top);
-      }
-      // if (task.getBoundingClientRect().top < hours[23].getBoundingClientRect().bottom) {
-      //   console.log("top > h23top");
-      // }
-      // if (task.getBoundingClientRect().left > hours[0].getBoundingClientRect().left) {
-      //   console.log("left < h0left");
-      // }
-      // if (task.getBoundingClientRect().left < hours[0].getBoundingClientRect().right) {
-      //   console.log("left > h0right");
-      // }
       return (0);
     }
   }
@@ -166,7 +153,7 @@ function applyPositionToTask() {
 
 function checkScroll() {
   let calendar = document.getElementById('calendar-wrapper');
-  let previous_task_top: string;
+  let hours = document.getElementsByClassName('hour-wrapper');
   let task;
 
   if (calendar) {
@@ -177,18 +164,14 @@ function checkScroll() {
         }
         for (let i = 0; i < tasks_array.length; i++) {
           task = document.getElementById('task'+i);
-          // I used a trick, to make the scroll work, it add the scroll to all the task, and then check 
-          // if the task is on calendar, if not, reinitialize to the initial task, but is not good, because
-          // it can create glitch of task that are not on calendar <!TO REFACTO>
+
           if (task && calendar) {
-            previous_task_top = task.style.top;
-            task.style.top = `${parseInt(task.style.top) - (calendar.scrollTop - previous_scroll.value)}px`;
-            if (isTasksOnCalendar(i)) {
-              console.log('ON CALENDAR');
-            }
-            else {
-              task.style.top = previous_task_top;
-            }
+            if (task.getBoundingClientRect().top - (calendar.scrollTop - previous_scroll.value) >= hours[0].getBoundingClientRect().top
+              && task.getBoundingClientRect().top - (calendar.scrollTop - previous_scroll.value)<= hours[23].getBoundingClientRect().bottom
+              && task.getBoundingClientRect().left >= hours[0].getBoundingClientRect().left
+              && task.getBoundingClientRect().left <= hours[0].getBoundingClientRect().right)   {
+                task.style.top = `${parseInt(task.style.top) - (calendar.scrollTop - previous_scroll.value)}px`;
+            }  
           }
         }
         previous_scroll.value = calendar.scrollTop;
