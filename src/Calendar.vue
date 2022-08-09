@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { onUpdated } from 'vue';
+import { onUpdated } from "vue";
 
-  onUpdated(() => {
-    console.log("Calendar update");
-  })
+onUpdated(() => {
+  console.log("Calendar update");
+});
 </script>
 
 <style lang="scss" scoped>

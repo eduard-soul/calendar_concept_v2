@@ -31,7 +31,7 @@ function provideTask(task) {
 }
 
 function initialScrollPosition() {
-  let calendar_wrapper = document.getElementById('calendar-wrapper');
+  let calendar_wrapper = document.getElementById("calendar-wrapper");
 
   if (calendar_wrapper) {
     calendar_wrapper.scrollTop = calendar_wrapper.scrollHeight / 4;
