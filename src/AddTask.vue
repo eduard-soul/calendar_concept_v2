@@ -69,11 +69,12 @@ onUpdated(() => {});
   #input-task {
     outline: none;
     height: 50%;
-    width: 80%;
+    width: 70%;
     border: none;
     border-radius: 1vh;
     font-size: 100%;
     padding-left: 10%;
+    background-color: white;
   }
   #input-separator {
     width: 30%;
