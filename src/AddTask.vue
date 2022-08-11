@@ -7,6 +7,7 @@
       v-model="input"
       autofocus
     />
+    <div id="input-separator"></div>
   </div>
 </template>
 
@@ -57,11 +58,13 @@ onUpdated(() => {});
 
 <style lang="scss" scoped>
 #input-wrapper {
+  padding-top: 2.5%;
   width: 100%;
-  height: 10%;
+  height: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 
   #input-task {
     outline: none;
@@ -70,6 +73,14 @@ onUpdated(() => {});
     border: none;
     border-radius: 1vh;
     font-size: 100%;
+    padding-left: 10%;
+  }
+  #input-separator {
+    width: 30%;
+    height: 2%;
+    margin-top: 5%;
+    background-color: grey;
+    opacity: 45%;
   }
 }
 </style>
