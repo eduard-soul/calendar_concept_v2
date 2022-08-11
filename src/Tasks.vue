@@ -94,7 +94,7 @@ function isTasksOnCalendar(n: number) {
     ) {
       return 1;
     } else {
-      task.style.height = `auto`;
+      task.style.height = `5%`;
       return 0;
     }
   }
@@ -152,6 +152,7 @@ function applyPositionToTask() {
     document.getElementsByClassName("task") as HTMLCollectionOf<HTMLElement>
   );
   let input = document.getElementById("input-wrapper");
+  let heading = document.getElementById("heading")?.getBoundingClientRect().height;
   let not_on_calendar_height = 0;
 
   if (tasks && input) {
@@ -163,7 +164,7 @@ function applyPositionToTask() {
         if (not_on_calendar_height !== 0) {
           tasks[i].style.top = `${not_on_calendar_height + input_height}px`;
         } else {
-          tasks[i].style.top = `${input_height}px`;
+          tasks[i].style.top = `${input_height + heading}px`;
         }
         tasks[i].style.left = `${input_left}px`;
         not_on_calendar_height += tasks[i].getBoundingClientRect().height;
@@ -240,15 +241,18 @@ onUpdated(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: yellow;
+  background-color: #D9DAF2;
 }
 .task {
-  width: 20%;
-  height: auto;
-  background-color: greenyellow;
+  margin-left: 2.5%;
+  border-radius: 1.5vh;
+  width: 25%;
+  height: 20%;
+  background-color: white;
   position: absolute;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
 
   .delete-task-btn {
     height: 100%;
