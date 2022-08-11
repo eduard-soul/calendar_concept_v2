@@ -152,7 +152,11 @@ function applyPositionToTask() {
     document.getElementsByClassName("task") as HTMLCollectionOf<HTMLElement>
   );
   let input = document.getElementById("input-wrapper");
-  let heading = document.getElementById("heading")?.getBoundingClientRect().height;
+  let heading_height = 0;
+  let heading =document.getElementById("heading") 
+  if (heading) {
+    heading_height = heading.getBoundingClientRect().height;
+  }
   let not_on_calendar_height = 0;
 
   if (tasks && input) {
@@ -164,13 +168,13 @@ function applyPositionToTask() {
         if (not_on_calendar_height !== 0) {
           tasks[i].style.top = `${not_on_calendar_height + input_height}px`;
         } else {
-          tasks[i].style.top = `${input_height + heading}px`;
+          tasks[i].style.top = `${input_height + heading_height}px`;
+          not_on_calendar_height = heading_height;
         }
         tasks[i].style.left = `${input_left}px`;
-        not_on_calendar_height += tasks[i].getBoundingClientRect().height;
+        not_on_calendar_height += tasks[i].getBoundingClientRect().height * 1.1;
       } else {
         putTaskOnQuarter(i, whereIsTask(i));
-        // console.log(whereIsTask(i));
       }
     }
   }
