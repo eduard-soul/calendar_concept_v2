@@ -1,4 +1,5 @@
 <template>
+  <header id="heading"><h1>plan your day</h1></header>
   <div id="all-wrapper">
     <section id="calendar-wrapper">
       <Calendar></Calendar>
@@ -45,14 +46,27 @@ onUpdated(() => {});
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:ital@1&display=swap');
+
 * {
   margin: 0;
   padding: 0;
 }
+header {
+  width: 100%;
+  height: 5%;
+  background-color: #FFF1E1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Josefin Slab', serif;
+  z-index: 100;
+  position: relative;
+}
 #all-wrapper {
   display: flex;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 5%);
   background-color: blue;
   user-select: none;
 
@@ -62,7 +76,7 @@ onUpdated(() => {});
     align-items: center;
     height: 100%;
     width: 70%;
-    background-color: red;
+    background-color: #D0E9EE;
     overflow-y: scroll;
   }
   #tasks-wrapper {
@@ -70,10 +84,7 @@ onUpdated(() => {});
     width: 30%;
     display: flex;
     flex-direction: column;
-    background-color: green;
+    background-color: #D9DAF2;
   }
-}
-button {
-  height: 100px;
 }
 </style>
