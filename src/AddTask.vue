@@ -62,10 +62,14 @@ onUpdated(() => {});
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: grey;
 
   #input-task {
+    outline: none;
+    height: 50%;
     width: 80%;
+    border: none;
+    border-radius: 1vh;
+    font-size: 100%;
   }
 }
 </style>
