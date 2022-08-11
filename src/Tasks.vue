@@ -8,8 +8,10 @@
       @mousedown="taskDrag(n, true), (task_index = n)"
       @mouseup="taskDrag(n, false), (task_index = n)"
     >
-      {{ task.name }} {{ n }}
-      {{ task.duration }}
+      <div class="task-props-wrapper">
+        <p class="task-name">{{ task.name }}</p>
+        <p class="task-duration">{{ task.duration }}</p>
+      </div>
       <button class="delete-task-btn" @click="deleteTask(n)">X</button>
     </div>
   </div>
@@ -23,7 +25,6 @@ import {
   reactive,
   ref,
   watch,
-  type Ref,
 } from "vue";
 
 interface Task_object {
@@ -35,7 +36,6 @@ let task_provided = reactive({ name: "", duration: 0 });
 let task_index = ref(0);
 let first = ref(true);
 let mouse_on_task = ref({ x: 0, y: 0 });
-let scroll_top = ref(0);
 let previous_scroll = ref(-1);
 
 function deleteTask(n: number) {
@@ -94,7 +94,7 @@ function isTasksOnCalendar(n: number) {
     ) {
       return 1;
     } else {
-      task.style.height = `5%`;
+      task.style.height = `7%`;
       return 0;
     }
   }
@@ -239,6 +239,8 @@ onUpdated(() => {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500&display=swap');
+
 #tasks {
   width: 100%;
   height: 100%;
@@ -248,9 +250,9 @@ onUpdated(() => {
   background-color: #D9DAF2;
 }
 .task {
-  margin-left: 2.5%;
+  margin-left: 3.1%;
   border-radius: 1.5vh;
-  width: 25%;
+  width: 24%;
   height: 20%;
   background-color: white;
   position: absolute;
@@ -258,8 +260,35 @@ onUpdated(() => {
   justify-content: space-around;
   align-items: center;
 
+  .task-props-wrapper {
+    display: flex; 
+    width: 75%;
+    justify-content: space-between;
+  }
+
+  .task-name, .task-duration {
+    font-family: 'Kantumruy Pro', sans-serif;
+    font-size: 200%;
+    font-weight: 500;
+  }
+  .task-name {
+    margin-left: 3%;
+  }
+  .task-duration {
+    color: grey;
+  }
+  .delete-task-btn:hover {
+    cursor: pointer; 
+    color: red;
+  }
   .delete-task-btn {
     height: 100%;
+    width: 10%;
+    font-size: 150%;
+    border: none;
+    color: #F69CA0;
+    font-weight: 600;
+    background-color: transparent;
   }
 }
 </style>
