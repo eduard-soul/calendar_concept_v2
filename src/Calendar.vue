@@ -25,26 +25,29 @@ onUpdated(() => {
 
 <style lang="scss" scoped>
 .hour-wrapper {
-  height: 7%;
   width: 90%;
   background-color: whitesmoke;
   border-radius: 2vh;
   padding: 1vh;
-  border-left: 0.5vh solid black;
-  border-right: 0.5vh solid black;
-  border-top: 0.25vh solid black;
-  border-bottom: 0.25vh solid black;
+  border-left: 0.5vh solid #A5D9D8;
+  border-right: 0.5vh solid #A5D9D8;
+  border-top: 0.25vh solid #A5D9D8;
+  border-bottom: 0.25vh solid #A5D9D8;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  h1 {
+    font-size: 5vh;
+  }
 }
 #hour0 {
   margin-top: 1%;
-  border-top: 0.5vh solid black;
+  border-top: 0.5vh solid #A5D9D8;
 }
 #hour23 {
   margin-bottom: 1%;
-  border-bottom: 0.5vh solid black;
+  border-bottom: 0.5vh solid #A5D9D8;
 }
 .quarter-wrapper {
   height: calc(100% + 2vh);
