@@ -12,7 +12,7 @@
         <p class="task-name">{{ task.name }}</p>
         <p class="task-duration">{{ task.duration }}</p>
       </div>
-      <button class="delete-task-btn" @click="deleteTask(n)">X</button>
+      <button class="delete-task-btn" :id="'delete-btn' + n" @click="deleteTask(n)">X</button>
     </div>
   </div>
 </template>
@@ -48,14 +48,15 @@ function moveTask(e: MouseEvent) {
   let task = document.getElementById("task" + task_index.value);
   let hours = document.getElementsByClassName('hour-wrapper');
 
+  console.log("moveTask");
   if (task) {
     if (first.value == true) {
       mouse_on_task.value.x = e.pageX - task.getBoundingClientRect().left;
       mouse_on_task.value.y = e.pageY - task.getBoundingClientRect().top;
       first.value = false;
     }
-    task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
     task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
+    task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
     if (isTasksOnCalendar(task_index.value)) {
       task.style.height = `${(hours[0].getBoundingClientRect().height / 60) * tasks_array[task_index.value].duration}px`;
     }
@@ -64,15 +65,19 @@ function moveTask(e: MouseEvent) {
 
 function taskDrag(n: number, mouse: boolean) {
   let app = document.getElementById("app");
+  let delete_btn = document.getElementById("delete-btn" + n);
+  let mouse_over_delete = false;
 
-  if (!app) {
-    console.error("document.getElementById('app')");
-  } else if (mouse) {
-    app.addEventListener("mousemove", moveTask);
-  } else {
-    app.removeEventListener("mousemove", moveTask);
-    applyPositionToTask();
-    first.value = true;
+  if (!mouse_over_delete) {
+    if (!app) {
+      console.error("document.getElementById('app')");
+    } else if (mouse) {
+      app.addEventListener("mousemove", moveTask);
+    } else {
+      app.removeEventListener("mousemove", moveTask);
+      applyPositionToTask();
+      first.value = true;
+    }
   }
 }
 
@@ -81,6 +86,7 @@ function isTasksOnCalendar(n: number) {
   let calendar_wrapper = document.getElementById("calendar-wrapper");
   let task = document.getElementById("task" + n);
 
+  console.log("isTasksOnCalendar");
   if (hours && calendar_wrapper && task) {
     if (
       task.getBoundingClientRect().top >=
@@ -109,6 +115,7 @@ function whereIsTask(n: number) {
     ) as HTMLCollectionOf<HTMLElement>
   );
 
+  console.log("whereIsTask");
   if (task) {
     let i = 0;
     if (
@@ -140,6 +147,7 @@ function putTaskOnQuarter(n: number, where: { hour: number; quarter: number }) {
     "h" + where.hour + "quarter" + where.quarter
   );
   let task = document.getElementById("task" + n);
+  console.log("putTaskOnQuarter");
 
   if (quarter && task) {
     task.style.top = `${quarter.getBoundingClientRect().top}px`;
@@ -159,11 +167,13 @@ function applyPositionToTask() {
   }
   let not_on_calendar_height = 0;
 
+  console.log("applyPositionToTask");
   if (tasks && input) {
     let input_height = input.getBoundingClientRect().height;
     let input_left = input.getBoundingClientRect().left;
 
     for (let i = 0; i < tasks_array.length; i++) {
+      console.log(tasks[i]);
       if (!isTasksOnCalendar(i)) {
         if (not_on_calendar_height !== 0) {
           tasks[i].style.top = `${not_on_calendar_height + input_height}px`;
@@ -171,7 +181,7 @@ function applyPositionToTask() {
           tasks[i].style.top = `${input_height + heading_height}px`;
           not_on_calendar_height = heading_height;
         }
-        tasks[i].style.left = `${input_left}px`;
+        tasks[i].style.left = ``;
         not_on_calendar_height += tasks[i].getBoundingClientRect().height * 1.1;
       } else {
         putTaskOnQuarter(i, whereIsTask(i));
@@ -185,6 +195,7 @@ function checkScroll() {
   let hours = document.getElementsByClassName("hour-wrapper");
   let task;
 
+  console.log("checkScroll");
   if (calendar) {
     calendar.addEventListener("scroll", () => {
       if (calendar) {
@@ -250,7 +261,6 @@ onUpdated(() => {
   background-color: #D9DAF2;
 }
 .task {
-  margin-left: 3.1%;
   border-radius: 1.5vh;
   width: 24%;
   height: 20%;
