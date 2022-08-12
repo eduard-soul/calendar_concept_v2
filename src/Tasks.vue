@@ -37,6 +37,7 @@ let task_index = ref(0);
 let first = ref(true);
 let mouse_on_task = ref({ x: 0, y: 0 });
 let previous_scroll = ref(-1);
+let from_calendar_to_tasks = ref(false);
 
 function deleteTask(n: number) {
   tasks_array.splice(n, 1);
@@ -47,18 +48,27 @@ task_provided = inject("task_provide");
 function moveTask(e: MouseEvent) {
   let task = document.getElementById("task" + task_index.value);
   let hours = document.getElementsByClassName('hour-wrapper');
+  let top_from_calendar = 0;
 
-  console.log("moveTask");
+  // console.log("moveTask");
   if (task) {
     if (first.value == true) {
       mouse_on_task.value.x = e.pageX - task.getBoundingClientRect().left;
       mouse_on_task.value.y = e.pageY - task.getBoundingClientRect().top;
       first.value = false;
+      // Maybe check here if the task is taken from calendar if so when not on calendar calc top
+      if (isTasksOnCalendar(task_index.value)) {
+        from_calendar_to_tasks.value = true;
+      } else {
+        from_calendar_to_tasks.value = false;
+      }
     }
     task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
     task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
     if (isTasksOnCalendar(task_index.value)) {
       task.style.height = `${(hours[0].getBoundingClientRect().height / 60) * tasks_array[task_index.value].duration}px`;
+    } else if (from_calendar_to_tasks.value == true) {
+      task.style.top = `${e.pageY - ((mouse_on_task.value.y / ((hours[0].getBoundingClientRect().height / 60) * tasks_array[task_index.value].duration)) * task.getBoundingClientRect().height)}px`;
     }
   }
 }
@@ -86,7 +96,7 @@ function isTasksOnCalendar(n: number) {
   let calendar_wrapper = document.getElementById("calendar-wrapper");
   let task = document.getElementById("task" + n);
 
-  console.log("isTasksOnCalendar");
+  // console.log("isTasksOnCalendar");
   if (hours && calendar_wrapper && task) {
     if (
       task.getBoundingClientRect().top >=
@@ -115,7 +125,7 @@ function whereIsTask(n: number) {
     ) as HTMLCollectionOf<HTMLElement>
   );
 
-  console.log("whereIsTask");
+  // console.log("whereIsTask");
   if (task) {
     let i = 0;
     if (
@@ -147,7 +157,7 @@ function putTaskOnQuarter(n: number, where: { hour: number; quarter: number }) {
     "h" + where.hour + "quarter" + where.quarter
   );
   let task = document.getElementById("task" + n);
-  console.log("putTaskOnQuarter");
+  // console.log("putTaskOnQuarter");
 
   if (quarter && task) {
     task.style.top = `${quarter.getBoundingClientRect().top}px`;
@@ -167,7 +177,7 @@ function applyPositionToTask() {
   }
   let not_on_calendar_height = 0;
 
-  console.log("applyPositionToTask");
+  // console.log("applyPositionToTask");
   if (tasks && input) {
     let input_height = input.getBoundingClientRect().height;
     let input_left = input.getBoundingClientRect().left;
@@ -195,7 +205,7 @@ function checkScroll() {
   let hours = document.getElementsByClassName("hour-wrapper");
   let task;
 
-  console.log("checkScroll");
+  // console.log("checkScroll");
   if (calendar) {
     calendar.addEventListener("scroll", () => {
       if (calendar) {
