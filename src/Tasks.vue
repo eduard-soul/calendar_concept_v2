@@ -319,7 +319,7 @@ onUpdated(() => {
     width: 80%;
     height: 30%;
     padding: 10%;
-    padding-bottom: 20%;
+    padding-bottom: 12.5%;
     color: black;
     font-size: calc(1vh + 1vw);
     font-family: 'Josefin Slab', serif;
