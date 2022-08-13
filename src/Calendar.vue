@@ -29,10 +29,10 @@ onUpdated(() => {
   background-color: whitesmoke;
   border-radius: 2vh;
   padding: 1vh;
-  border-left: 0.5vh solid #A5D9D8;
-  border-right: 0.5vh solid #A5D9D8;
-  border-top: 0.25vh solid #A5D9D8;
-  border-bottom: 0.25vh solid #A5D9D8;
+  border-left: 0.5vh solid #a5d9d8;
+  border-right: 0.5vh solid #a5d9d8;
+  border-top: 0.25vh solid #a5d9d8;
+  border-bottom: 0.25vh solid #a5d9d8;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,11 +43,11 @@ onUpdated(() => {
 }
 #hour0 {
   margin-top: 1%;
-  border-top: 0.5vh solid #A5D9D8;
+  border-top: 0.5vh solid #a5d9d8;
 }
 #hour23 {
   margin-bottom: 1%;
-  border-bottom: 0.5vh solid #A5D9D8;
+  border-bottom: 0.5vh solid #a5d9d8;
 }
 .quarter-wrapper {
   height: calc(100% + 2vh);

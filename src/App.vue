@@ -21,7 +21,7 @@
 import Calendar from "./Calendar.vue";
 import AddTask from "./AddTask.vue";
 import Tasks from "./Tasks.vue";
-import { onMounted, onUpdated, provide, reactive, ref } from "vue";
+import { onMounted, onUpdated, provide, reactive } from "vue";
 
 let task_provide = reactive({ name: "", duration: 0 });
 provide("task_provide", task_provide);
@@ -46,7 +46,7 @@ onUpdated(() => {});
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:ital@1&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Slab:ital@1&display=swap");
 
 * {
   margin: 0;
@@ -55,11 +55,11 @@ onUpdated(() => {});
 header {
   width: 100%;
   height: 5%;
-  background-color: #FFF1E1;
+  background-color: #fff1e1;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Josefin Slab', serif;
+  font-family: "Josefin Slab", serif;
   z-index: 100;
   position: relative;
 }
@@ -76,7 +76,7 @@ header {
     align-items: center;
     height: 100%;
     width: 70%;
-    background-color: #D0E9EE;
+    background-color: #d0e9ee;
     overflow-y: scroll;
   }
   #tasks-wrapper {
@@ -84,7 +84,7 @@ header {
     width: 30%;
     display: flex;
     flex-direction: column;
-    background-color: #D9DAF2;
+    background-color: #d9daf2;
   }
 }
 </style>
