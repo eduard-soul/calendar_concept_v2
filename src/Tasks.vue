@@ -10,7 +10,7 @@
     >
       <div class="task-props-wrapper">
         <p class="task-name">{{ task.name }}</p>
-        <p class="task-duration">{{ task.duration }}</p>
+        <p class="task-duration">{{ task.duration > 60 ? task.duration / 60 + 'h' : task.duration + 'm'}}</p>
       </div>
       <button class="delete-task-btn" :id="'delete-btn' + n" @click="deleteTask(n)">X</button>
     </div>
@@ -183,7 +183,7 @@ function applyPositionToTask() {
     let input_left = input.getBoundingClientRect().left;
 
     for (let i = 0; i < tasks_array.length; i++) {
-      console.log(tasks[i]);
+      // console.log(tasks[i]);
       if (!isTasksOnCalendar(i)) {
         if (not_on_calendar_height !== 0) {
           tasks[i].style.top = `${not_on_calendar_height + input_height}px`;
