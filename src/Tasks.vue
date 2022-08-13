@@ -93,7 +93,7 @@ function moveTask(e: MouseEvent) {
     task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
     if (isTasksOnCalendar(task_index.value)) {
       task.style.height = `${
-        (hours[0].getBoundingClientRect().height / 60) *
+        (hours[0].getBoundingClientRect().height / 62.5) *
         tasks_array[task_index.value].duration
       }px`;
     } else if (from_calendar_to_tasks.value == true) {
@@ -343,6 +343,7 @@ onUpdated(() => {
   justify-content: space-around;
   align-items: center;
   cursor: grab;
+  border-bottom: 0.5vh solid grey;
 
   .task-props-wrapper {
     display: flex;
