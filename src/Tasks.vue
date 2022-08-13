@@ -10,22 +10,27 @@
     >
       <div class="task-props-wrapper">
         <p class="task-name">{{ task.name }}</p>
-        <p class="task-duration">{{ task.duration > 60 ? task.duration / 60 + 'h' : task.duration + 'm'}}</p>
+        <p class="task-duration">
+          {{
+            task.duration > 60 ? task.duration / 60 + "h" : task.duration + "m"
+          }}
+        </p>
       </div>
-      <button class="delete-task-btn" :id="'delete-btn' + n" @click="deleteTask(n)">X</button>
+      <button
+        class="delete-task-btn"
+        :id="'delete-btn' + n"
+        @click="deleteTask(n)"
+        @mouseenter="mouse_over_delete = true"
+        @mouseleave="mouse_over_delete = false"
+      >
+        X
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {
-  inject,
-  onMounted,
-  onUpdated,
-  reactive,
-  ref,
-  watch,
-} from "vue";
+import { inject, onMounted, onUpdated, reactive, ref, watch } from "vue";
 
 interface Task_object {
   name: string;
@@ -38,19 +43,33 @@ let first = ref(true);
 let mouse_on_task = ref({ x: 0, y: 0 });
 let previous_scroll = ref(-1);
 let from_calendar_to_tasks = ref(false);
+let mouse_over_delete = ref(false);
 
 function deleteTask(n: number) {
+  console.log('deleteTask');
+  for (let i = n; i < tasks_array.length - 1; i++) {
+    let task1 = document.getElementById('task' + i);
+    let task2 = document.getElementById('task' + (i + 1));
+
+    console.log("task1 = task2");
+    if (task1 && task2) {
+      task1.style.left = task2.style.left;
+      task1.style.top = task2.style.top;
+      task1.style.height = task2.style.height;
+    }
+  }
   tasks_array.splice(n, 1);
+  applyPositionToTask();
 }
 
 task_provided = inject("task_provide");
 
 function moveTask(e: MouseEvent) {
   let task = document.getElementById("task" + task_index.value);
-  let hours = document.getElementsByClassName('hour-wrapper');
+  let hours = document.getElementsByClassName("hour-wrapper");
   let top_from_calendar = 0;
 
-  // console.log("moveTask");
+  console.log("moveTask");
   if (task) {
     if (first.value == true) {
       mouse_on_task.value.x = e.pageX - task.getBoundingClientRect().left;
@@ -66,9 +85,18 @@ function moveTask(e: MouseEvent) {
     task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
     task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
     if (isTasksOnCalendar(task_index.value)) {
-      task.style.height = `${(hours[0].getBoundingClientRect().height / 60) * tasks_array[task_index.value].duration}px`;
+      task.style.height = `${
+        (hours[0].getBoundingClientRect().height / 60) *
+        tasks_array[task_index.value].duration
+      }px`;
     } else if (from_calendar_to_tasks.value == true) {
-      task.style.top = `${e.pageY - ((mouse_on_task.value.y / ((hours[0].getBoundingClientRect().height / 60) * tasks_array[task_index.value].duration)) * task.getBoundingClientRect().height)}px`;
+      task.style.top = `${
+        e.pageY -
+        (mouse_on_task.value.y /
+          ((hours[0].getBoundingClientRect().height / 60) *
+            tasks_array[task_index.value].duration)) *
+          task.getBoundingClientRect().height
+      }px`;
     }
   }
 }
@@ -76,9 +104,10 @@ function moveTask(e: MouseEvent) {
 function taskDrag(n: number, mouse: boolean) {
   let app = document.getElementById("app");
   let delete_btn = document.getElementById("delete-btn" + n);
-  let mouse_over_delete = false;
 
-  if (!mouse_over_delete) {
+  console.log(mouse_over_delete.value);
+  if (!mouse_over_delete.value) {
+    console.log("taskDrag");
     if (!app) {
       console.error("document.getElementById('app')");
     } else if (mouse) {
@@ -96,7 +125,7 @@ function isTasksOnCalendar(n: number) {
   let calendar_wrapper = document.getElementById("calendar-wrapper");
   let task = document.getElementById("task" + n);
 
-  // console.log("isTasksOnCalendar");
+  console.log("isTasksOnCalendar");
   if (hours && calendar_wrapper && task) {
     if (
       task.getBoundingClientRect().top >=
@@ -125,7 +154,7 @@ function whereIsTask(n: number) {
     ) as HTMLCollectionOf<HTMLElement>
   );
 
-  // console.log("whereIsTask");
+  console.log("whereIsTask");
   if (task) {
     let i = 0;
     if (
@@ -157,7 +186,7 @@ function putTaskOnQuarter(n: number, where: { hour: number; quarter: number }) {
     "h" + where.hour + "quarter" + where.quarter
   );
   let task = document.getElementById("task" + n);
-  // console.log("putTaskOnQuarter");
+  console.log("putTaskOnQuarter");
 
   if (quarter && task) {
     task.style.top = `${quarter.getBoundingClientRect().top}px`;
@@ -171,13 +200,13 @@ function applyPositionToTask() {
   );
   let input = document.getElementById("input-wrapper");
   let heading_height = 0;
-  let heading =document.getElementById("heading") 
+  let heading = document.getElementById("heading");
   if (heading) {
     heading_height = heading.getBoundingClientRect().height;
   }
   let not_on_calendar_height = 0;
 
-  // console.log("applyPositionToTask");
+  console.log("applyPositionToTask");
   if (tasks && input) {
     let input_height = input.getBoundingClientRect().height;
     let input_left = input.getBoundingClientRect().left;
@@ -205,7 +234,7 @@ function checkScroll() {
   let hours = document.getElementsByClassName("hour-wrapper");
   let task;
 
-  // console.log("checkScroll");
+  console.log("checkScroll");
   if (calendar) {
     calendar.addEventListener("scroll", () => {
       if (calendar) {
@@ -255,12 +284,15 @@ onMounted(() => {
 
 onUpdated(() => {
   console.log("Tasks.vue updated");
-  applyPositionToTask();
+  if (!mouse_over_delete.value) {
+    applyPositionToTask();
+  }
+  mouse_over_delete.value = false;
 });
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500&display=swap");
 
 #tasks {
   width: 100%;
@@ -268,7 +300,7 @@ onUpdated(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #D9DAF2;
+  background-color: #d9daf2;
 }
 .task {
   border-radius: 1.5vh;
@@ -281,13 +313,14 @@ onUpdated(() => {
   align-items: center;
 
   .task-props-wrapper {
-    display: flex; 
+    display: flex;
     width: 75%;
     justify-content: space-between;
   }
 
-  .task-name, .task-duration {
-    font-family: 'Kantumruy Pro', sans-serif;
+  .task-name,
+  .task-duration {
+    font-family: "Kantumruy Pro", sans-serif;
     font-size: 200%;
     font-weight: 500;
   }
@@ -298,7 +331,7 @@ onUpdated(() => {
     color: grey;
   }
   .delete-task-btn:hover {
-    cursor: pointer; 
+    cursor: pointer;
     color: red;
   }
   .delete-task-btn {
@@ -306,7 +339,7 @@ onUpdated(() => {
     width: 10%;
     font-size: 150%;
     border: none;
-    color: #F69CA0;
+    color: #f69ca0;
     font-weight: 600;
     background-color: transparent;
   }
