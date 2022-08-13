@@ -26,6 +26,13 @@
         X
       </button>
     </div>
+    <div id="explanation">
+      <p>To add a task : <br><br> 
+          - Type the task name <br>
+          - Add the caracther&ensp;‘:’ <br>
+          - And type the duration <span id="additional-infos">(by default in minutes, 
+          add 'h' after the duration to make the duration in hours)</span></p>
+    </div>
   </div>
 </template>
 
@@ -297,6 +304,7 @@ onUpdated(() => {
 
 <style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@300&display=swap');
 
 #tasks {
   width: 100%;
@@ -304,7 +312,22 @@ onUpdated(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   background-color: #d9daf2;
+
+  #explanation {
+    width: 80%;
+    height: 30%;
+    padding: 10%;
+    padding-bottom: 20%;
+    color: black;
+    font-size: calc(1vh + 1vw);
+    font-family: 'Josefin Slab', serif;
+
+    #additional-infos {
+      color: grey;
+    }
+  }
 }
 .task {
   border-radius: 1.5vh;
