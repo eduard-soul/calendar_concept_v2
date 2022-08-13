@@ -111,17 +111,20 @@ function moveTask(e: MouseEvent) {
 function taskDrag(n: number, mouse: boolean) {
   let app = document.getElementById("app");
   let delete_btn = document.getElementById("delete-btn" + n);
+  let task = document.getElementById('task'+n);
 
   console.log(mouse_over_delete.value);
-  if (!mouse_over_delete.value) {
+  if (!mouse_over_delete.value && task) {
     console.log("taskDrag");
     if (!app) {
       console.error("document.getElementById('app')");
     } else if (mouse) {
       app.addEventListener("mousemove", moveTask);
+      task.style.cursor = 'move';
     } else {
       app.removeEventListener("mousemove", moveTask);
       applyPositionToTask();
+      task.style.cursor = 'grab';
       first.value = true;
     }
   }
@@ -329,6 +332,7 @@ onUpdated(() => {
     }
   }
 }
+
 .task {
   border-radius: 1.5vh;
   width: 24%;
@@ -338,6 +342,7 @@ onUpdated(() => {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  cursor: grab;
 
   .task-props-wrapper {
     display: flex;
