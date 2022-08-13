@@ -278,6 +278,10 @@ watch(task_provided, () => {
   tasks_array.push(task);
 });
 
+window.addEventListener('resize', () => {
+  applyPositionToTask()
+});
+
 onMounted(() => {
   checkScroll();
 });
