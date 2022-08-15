@@ -53,20 +53,26 @@ let from_calendar_to_tasks = ref(false);
 let mouse_over_delete = ref(false);
 
 function deleteTask(n: number) {
-  console.log('deleteTask');
-  for (let i = n; i < tasks_array.length - 1; i++) {
-    let task1 = document.getElementById('task' + i);
-    let task2 = document.getElementById('task' + (i + 1));
+  // console.log('deleteTask');
+  let task = document.getElementById('task' + n);
 
-    console.log("task1 = task2");
-    if (task1 && task2) {
-      task1.style.left = task2.style.left;
-      task1.style.top = task2.style.top;
-      task1.style.height = task2.style.height;
-    }
+  if (task) {
+    task.classList.add('delete-animation');
   }
-  tasks_array.splice(n, 1);
-  applyPositionToTask();
+  setTimeout(() => {
+    for (let i = n; i < tasks_array.length - 1; i++) {
+      let task1 = document.getElementById('task' + i);
+      let task2 = document.getElementById('task' + (i + 1));
+
+      if (task1 && task2) {
+        task1.style.left = task2.style.left;
+        task1.style.top = task2.style.top;
+        task1.style.height = task2.style.height;
+      }
+    }
+    tasks_array.splice(n, 1);
+    applyPositionToTask();
+  }, 200);
 }
 
 task_provided = inject("task_provide");
@@ -76,7 +82,7 @@ function moveTask(e: MouseEvent) {
   let hours = document.getElementsByClassName("hour-wrapper");
   let top_from_calendar = 0;
 
-  console.log("moveTask");
+  // console.log("moveTask");
   if (task) {
     if (first.value == true) {
       mouse_on_task.value.x = e.pageX - task.getBoundingClientRect().left;
@@ -91,18 +97,15 @@ function moveTask(e: MouseEvent) {
     }
     task.style.left = `${e.pageX - mouse_on_task.value.x}px`;
     task.style.top = `${e.pageY - mouse_on_task.value.y}px`;
+    let duration = tasks_array[task_index.value].duration > 14 ? tasks_array[task_index.value].duration : 15;
     if (isTasksOnCalendar(task_index.value)) {
       task.style.height = `${
-        (hours[0].getBoundingClientRect().height / 62.5) *
-        tasks_array[task_index.value].duration
+        (hours[0].getBoundingClientRect().height / 62.5) * duration
       }px`;
     } else if (from_calendar_to_tasks.value == true) {
       task.style.top = `${
-        e.pageY -
-        (mouse_on_task.value.y /
-          ((hours[0].getBoundingClientRect().height / 60) *
-            tasks_array[task_index.value].duration)) *
-          task.getBoundingClientRect().height
+        e.pageY - (mouse_on_task.value.y / ((hours[0].getBoundingClientRect().height / 60) *
+            duration)) * task.getBoundingClientRect().height
       }px`;
     }
   }
@@ -113,9 +116,8 @@ function taskDrag(n: number, mouse: boolean) {
   let delete_btn = document.getElementById("delete-btn" + n);
   let task = document.getElementById('task'+n);
 
-  console.log(mouse_over_delete.value);
   if (!mouse_over_delete.value && task) {
-    console.log("taskDrag");
+    // console.log("taskDrag");
     if (!app) {
       console.error("document.getElementById('app')");
     } else if (mouse) {
@@ -135,7 +137,7 @@ function isTasksOnCalendar(n: number) {
   let calendar_wrapper = document.getElementById("calendar-wrapper");
   let task = document.getElementById("task" + n);
 
-  console.log("isTasksOnCalendar");
+  // console.log("isTasksOnCalendar");
   if (hours && calendar_wrapper && task) {
     if (
       task.getBoundingClientRect().top >=
@@ -164,7 +166,7 @@ function whereIsTask(n: number) {
     ) as HTMLCollectionOf<HTMLElement>
   );
 
-  console.log("whereIsTask");
+  // console.log("whereIsTask");
   if (task) {
     let i = 0;
     if (
@@ -196,7 +198,7 @@ function putTaskOnQuarter(n: number, where: { hour: number; quarter: number }) {
     "h" + where.hour + "quarter" + where.quarter
   );
   let task = document.getElementById("task" + n);
-  console.log("putTaskOnQuarter");
+  // console.log("putTaskOnQuarter");
 
   if (quarter && task) {
     task.style.top = `${quarter.getBoundingClientRect().top}px`;
@@ -216,7 +218,7 @@ function applyPositionToTask() {
   }
   let not_on_calendar_height = 0;
 
-  console.log("applyPositionToTask");
+  // console.log("applyPositionToTask");
   if (tasks && input) {
     let input_height = input.getBoundingClientRect().height;
     let input_left = input.getBoundingClientRect().left;
@@ -244,7 +246,7 @@ function checkScroll() {
   let hours = document.getElementsByClassName("hour-wrapper");
   let task;
 
-  console.log("checkScroll");
+  // console.log("checkScroll");
   if (calendar) {
     calendar.addEventListener("scroll", () => {
       if (calendar) {
@@ -347,14 +349,15 @@ onUpdated(() => {
 
   .task-props-wrapper {
     display: flex;
+    height: 100%;
     width: 75%;
     justify-content: space-between;
+    align-items: center;
   }
 
   .task-name,
   .task-duration {
     font-family: "Kantumruy Pro", sans-serif;
-    font-size: 200%;
     font-weight: 500;
   }
   .task-name {
@@ -370,7 +373,7 @@ onUpdated(() => {
   .delete-task-btn {
     height: 100%;
     width: 10%;
-    font-size: 150%;
+    font-size: 90%;
     border: none;
     color: #f69ca0;
     font-weight: 600;
