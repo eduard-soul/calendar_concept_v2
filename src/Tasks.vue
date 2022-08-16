@@ -140,8 +140,6 @@ function isTasksOnCalendar(n: number) {
   // console.log("isTasksOnCalendar");
   if (hours && calendar_wrapper && task) {
     if (
-      task.getBoundingClientRect().top >=
-        hours[0].getBoundingClientRect().top &&
       task.getBoundingClientRect().top <=
         hours[23].getBoundingClientRect().bottom &&
       task.getBoundingClientRect().left >=
@@ -181,15 +179,21 @@ function whereIsTask(n: number) {
         break;
       }
     }
-    i--;
+    if (i != 0) {
+      i--;
+    }
     where.hour = i;
     where.quarter = Math.floor(
       (task.getBoundingClientRect().top -
         hours[i].getBoundingClientRect().top) /
         (hours[i].getBoundingClientRect().height / 4)
     );
+    if (where.quarter < 0) {
+      where.quarter = 0;
+    }
   }
 
+  console.log("where = " + where.hour + where.quarter);
   return where;
 }
 
