@@ -4,6 +4,9 @@ A calendar, where the flow of the ideas you want to do can be express,
 just type all the things and the duration of what you have in mind,
 then you can simply drag them into the calendar !
 
+## Images
+![calendar_concept](./git_images/calendar_concept.png)
+
 ## Project Setup
 
 ```sh
